@@ -1,6 +1,7 @@
 const firePixelsArray = [];
 let fireWidth = 60;
 let fireHeight = 40;
+let debug = false;
 const fireColorsPalette = [
     { "r": 7, "g": 7, "b": 7 },
     { "r": 31, "g": 7, "b": 7 },
@@ -44,7 +45,6 @@ const fireColorsPalette = [
 function start() {
     createFireDataStructure();
     createFireSource();
-    renderFire();
 
     setInterval(calculateFirePropagation, 50);
 }
@@ -72,19 +72,23 @@ function calculateFirePropagation() {
 function updateFireItensityPerPixel(currentPixelIndex) {
     const belowPixelIndex = currentPixelIndex + fireWidth;
 
+    // belowPixelIndex overflow canvas
     if (belowPixelIndex >= fireWidth * fireHeight) {
         return;
     }
 
     const decay = Math.floor(Math.random() * 3);
-    const bellowPixelFireIntensity = firePixelsArray[belowPixelIndex];
-    const newFireIntensity = bellowPixelFireIntensity - decay >= 0 ? bellowPixelFireIntensity - decay : 0;
+    const belowPixelFireIntensity = firePixelsArray[belowPixelIndex];
+    let newFireIntensity = belowPixelFireIntensity - decay;
+
+    if (newFireIntensity < 0) {
+        newFireIntensity = 0;
+    }
 
     firePixelsArray[currentPixelIndex - decay] = newFireIntensity;
 }
 
 function renderFire() {
-    const debug = false;
     let html = '<table cellpadding=0 cellspacing=0>';
 
     for (let row = 0; row < fireHeight; row++) {
@@ -92,17 +96,16 @@ function renderFire() {
 
         for (let column = 0; column < fireWidth; column++) {
             const pixelIndex = column + (fireWidth * row);
-            const fireIntesity = firePixelsArray[pixelIndex];
+            const fireIntensity = firePixelsArray[pixelIndex];
+            const color = fireColorsPalette[fireIntensity];
+            const colorString = `${color.r},${color.g},${color.b}`;
 
             if (debug === true) {
                 html += '<td>';
                 html += `<div class="pixel-index">${pixelIndex}</div>`;
-                html += fireIntesity;
+                html += `<div style="color: rgb(${colorString})">${fireIntensity}</div>`;
                 html += '</td>';
             } else {
-                const color = fireColorsPalette[fireIntesity];
-                const colorString = `${color.r},${color.g},${color.b}`;
-
                 html += `<td class="pixel" style="background-color: rgb(${colorString})">`;
                 html += '</td>';
             }
@@ -124,6 +127,68 @@ function createFireSource() {
 
         firePixelsArray[pixelIndex] = 36;
     }
+}
+
+function destroyFireSource() {
+    for (let column = 0; column <= fireWidth; column++) {
+        const overflowPixelIndex = fireWidth * fireHeight;
+        const pixelIndex = (overflowPixelIndex - fireWidth) + column;
+
+        firePixelsArray[pixelIndex] = 0;
+    }
+}
+
+function increaseFireSource() {
+    for (let column = 0; column <= fireWidth; column++) {
+        const overflowPixelIndex = fireWidth * fireHeight;
+        const pixelIndex = (overflowPixelIndex - fireWidth) + column;
+        const currentFireIntensity = firePixelsArray[pixelIndex];
+
+        if (currentFireIntensity < 36) {
+            const increase = Math.floor(Math.random() * 14);
+            let newFireIntensity = currentFireIntensity + increase;
+
+            if (newFireIntensity > 36) {
+                newFireIntensity = 36;
+            }
+
+            firePixelsArray[pixelIndex] = newFireIntensity;
+        }
+    }
+}
+
+function decreaseFireSource() {
+    for (let column = 0; column <= fireWidth; column++) {
+        const overflowPixelIndex = fireWidth * fireHeight;
+        const pixelIndex = (overflowPixelIndex - fireWidth) + column;
+        const currentFireIntensity = firePixelsArray[pixelIndex];
+
+        if (currentFireIntensity > 0) {
+            const decay = Math.floor(Math.random() * 14);
+            let newFireIntensity = currentFireIntensity - decay;
+
+            if (newFireIntensity < 0) {
+                newFireIntensity = 0;
+            }
+
+            firePixelsArray[pixelIndex] = newFireIntensity;
+        }
+    }
+}
+
+function toggleDebugMode() {
+    if (debug === false) {
+        fireWidth = 30;
+        fireHeight = 20;
+    } else {
+        fireWidth = 60;
+        fireHeight = 40;
+    }
+
+    debug = !debug;
+
+    createFireDataStructure();
+    createFireSource();
 }
 
 start();

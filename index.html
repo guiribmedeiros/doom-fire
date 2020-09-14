@@ -15,7 +15,20 @@
 <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
 
-    <div id="fire-canvas"></div>
+    <center>
+        <h1>DOOM Fire</h1>
+        <div id="fire-canvas"></div>
+
+        <div class="margin">
+            <button onclick="decreaseFireSource();">-</button>
+            <button onclick="destroyFireSource();">Min Fire</button>
+            <button onclick="createFireSource();">Max Fire</button>
+            <button onclick="increaseFireSource();">+</button>
+        </div>
+        <div class="margin">
+            <button onclick="toggleDebugMode();">Toggle Debug Mode</button>
+        </div>
+    </center>
 
     <script src="./assets/doom-fire.js"></script>
 </body>
