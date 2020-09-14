@@ -123,9 +123,11 @@ function renderFire() {
     let html = '<table cellpadding=0 cellspacing=0>';
 
     for (let row = 0; row < fireHeight; row++) {
+        // for (let row = fireHeight - 1; row >= 0; row--) {
         html += '<tr>';
 
         for (let column = 0; column < fireWidth; column++) {
+            // for (let column = fireWidth - 1; column >= 0; column--) {
             const pixelIndex = column + (fireWidth * row);
             const fireIntensity = firePixelsArray[pixelIndex];
             const color = fireColorsPalette[fireIntensity];
