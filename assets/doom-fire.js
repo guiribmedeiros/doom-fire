@@ -2,7 +2,7 @@ const firePixelsArray = [];
 let fireWidth = 60;
 let fireHeight = 40;
 let debug = false;
-// let way = 0;
+let way = 0;
 const fireColorsPalette = [
     { "r": 7, "g": 7, "b": 7 },
     { "r": 31, "g": 7, "b": 7 },
@@ -48,9 +48,6 @@ function start() {
     createFireSource();
 
     setInterval(calculateFirePropagation, 50);
-
-    // here we can change the time to randomly change de wind direction
-    // setInterval(changeWindDirection, 5000);
 }
 
 function createFireDataStructure() {
@@ -73,15 +70,9 @@ function calculateFirePropagation() {
     renderFire();
 }
 
-// function changeWindDirection() {
-//     let newWind = 10;
-
-//     while (newWind > 2) {
-//         newWind = Math.floor(Math.random() * 10);
-//     }
-
-//     way = newWind;
-// }
+function changeWindDirection(value) {
+    way = value;
+}
 
 function updateFireItensityPerPixel(currentPixelIndex) {
     const belowPixelIndex = currentPixelIndex + fireWidth;
@@ -99,24 +90,22 @@ function updateFireItensityPerPixel(currentPixelIndex) {
         newFireIntensity = 0;
     }
 
-    // switch (way) {
-    //     case 0:
-    //         // wind comes to the left
-    //         firePixelsArray[currentPixelIndex - decay] = newFireIntensity;
-    //         break;
+    switch (way) {
+        case 0:
+            // wind comes to the left
+            firePixelsArray[currentPixelIndex - decay] = newFireIntensity;
+            break;
 
-    //     case 1:
-    //         // no wind (fire set to up)
-    //         firePixelsArray[currentPixelIndex] = newFireIntensity;
-    //         break;
+        case 1:
+            // no wind (fire set to up)
+            firePixelsArray[currentPixelIndex] = newFireIntensity;
+            break;
 
-    //     case 2:
-    //         // wind comes to the right
-    //         firePixelsArray[currentPixelIndex + decay] = newFireIntensity;
-    //         break;
-    // }
-
-    firePixelsArray[currentPixelIndex - decay] = newFireIntensity;
+        case 2:
+            // wind comes to the right
+            firePixelsArray[currentPixelIndex + decay] = newFireIntensity;
+            break;
+    }
 }
 
 function renderFire() {
