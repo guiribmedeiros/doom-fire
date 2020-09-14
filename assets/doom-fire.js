@@ -130,6 +130,15 @@ function renderFire() {
             // for (let column = fireWidth - 1; column >= 0; column--) {
             const pixelIndex = column + (fireWidth * row);
             const fireIntensity = firePixelsArray[pixelIndex];
+            // const negateColor = (color) => Math.abs(color - 255)
+            // const negateColors = ({ r, g, b }) => {
+            //     return {
+            //         r: negateColor(r),
+            //         g: negateColor(g),
+            //         b: negateColor(b),
+            //     }
+            // };
+            // const color = negateColors(fireColorsPalette[fireIntensity]);
             const color = fireColorsPalette[fireIntensity];
             const colorString = `${color.r},${color.g},${color.b}`;
 
