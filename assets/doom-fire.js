@@ -1,6 +1,6 @@
 const firePixelsArray = [];
-let fireWidth = 60;
-let fireHeight = 40;
+let fireWidth = 200;
+let fireHeight = 80;
 let debug = false;
 let way = 0;
 const fireColorsPalette = [
@@ -42,10 +42,16 @@ const fireColorsPalette = [
     { "r": 239, "g": 239, "b": 199 },
     { "r": 255, "g": 255, "b": 255 }
 ];
+const canvas = document.getElementById('fire-canvas');
+const canvasContext = canvas.getContext('2d');
+const pixelSize = 4;
 
 function start() {
     createFireDataStructure();
     createFireSource();
+
+    canvas.width = fireWidth * pixelSize;
+    canvas.height = fireHeight * pixelSize;
 
     setInterval(calculateFirePropagation, 50);
 }
@@ -82,7 +88,7 @@ function updateFireItensityPerPixel(currentPixelIndex) {
         return;
     }
 
-    const decay = Math.floor(Math.random() * 3);
+    const decay = Math.floor(Math.random() * 2); // 3?
     const belowPixelFireIntensity = firePixelsArray[belowPixelIndex];
     let newFireIntensity = belowPixelFireIntensity - decay;
 
@@ -109,11 +115,8 @@ function updateFireItensityPerPixel(currentPixelIndex) {
 }
 
 function renderFire() {
-    let html = '<table cellpadding=0 cellspacing=0>';
-
     for (let row = 0; row < fireHeight; row++) {
         // for (let row = fireHeight - 1; row >= 0; row--) {
-        html += '<tr>';
 
         for (let column = 0; column < fireWidth; column++) {
             // for (let column = fireWidth - 1; column >= 0; column--) {
@@ -132,23 +135,15 @@ function renderFire() {
             const colorString = `${color.r},${color.g},${color.b}`;
 
             if (debug === true) {
-                html += '<td>';
-                html += `<div class="pixel-index">${pixelIndex}</div>`;
-                html += `<div style="color: rgb(${colorString})">${fireIntensity}</div>`;
-                html += '</td>';
+                // html += `<div class="pixel-index">${pixelIndex}</div>`;
+                // html += `<div style="color: rgb(${colorString})">${fireIntensity}</div>`;
             } else {
-                html += `<td class="pixel" style="background-color: rgb(${colorString})">`;
-                html += '</td>';
+                // html += `<td class="pixel" style="background-color: rgb(${colorString})">`;
+                canvasContext.fillStyle = `rgb(${colorString})`;
+                canvasContext.fillRect(column * pixelSize, row * pixelSize, pixelSize, pixelSize);
             }
-
         }
-
-        html += '</tr>';
     }
-
-    html += '</table>';
-
-    document.querySelector('#fire-canvas').innerHTML = html;
 }
 
 function createFireSource() {
@@ -209,11 +204,11 @@ function decreaseFireSource() {
 
 function toggleDebugMode() {
     if (debug === false) {
-        fireWidth = 30;
-        fireHeight = 20;
+        fireWidth = 200;
+        fireHeight = 80;
     } else {
-        fireWidth = 60;
-        fireHeight = 40;
+        // fireWidth = 60;
+        // fireHeight = 40;
     }
 
     debug = !debug;
