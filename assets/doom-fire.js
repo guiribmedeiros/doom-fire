@@ -3,6 +3,8 @@ let fireWidth = 200;
 let fireHeight = 80;
 let debug = false;
 let way = 0;
+let fireBase = 36;
+let pixelSize = 4;
 const fireColorsPalette = [
     { "r": 7, "g": 7, "b": 7 },
     { "r": 31, "g": 7, "b": 7 },
@@ -44,16 +46,19 @@ const fireColorsPalette = [
 ];
 const canvas = document.getElementById('fire-canvas');
 const canvasContext = canvas.getContext('2d');
-const pixelSize = 4;
+const table = document.getElementById('fire-table');
 
 function start() {
     createFireDataStructure();
     createFireSource();
-
-    canvas.width = fireWidth * pixelSize;
-    canvas.height = fireHeight * pixelSize;
+    calculateCanvasDimension();
 
     setInterval(calculateFirePropagation, 50);
+}
+
+function calculateCanvasDimension() {
+    canvas.width = fireWidth * pixelSize;
+    canvas.height = fireHeight * pixelSize;
 }
 
 function createFireDataStructure() {
@@ -115,8 +120,11 @@ function updateFireItensityPerPixel(currentPixelIndex) {
 }
 
 function renderFire() {
+    let html = '';
+
     for (let row = 0; row < fireHeight; row++) {
         // for (let row = fireHeight - 1; row >= 0; row--) {
+        html += '<tr>';
 
         for (let column = 0; column < fireWidth; column++) {
             // for (let column = fireWidth - 1; column >= 0; column--) {
@@ -135,14 +143,22 @@ function renderFire() {
             const colorString = `${color.r},${color.g},${color.b}`;
 
             if (debug === true) {
-                // html += `<div class="pixel-index">${pixelIndex}</div>`;
-                // html += `<div style="color: rgb(${colorString})">${fireIntensity}</div>`;
+                html += '<td>';
+                html += `<div class="pixel-index">${pixelIndex}</div>`;
+                html += `<div style="color: rgb(${colorString})">${fireIntensity}</div>`;
+                html += '</td>';
             } else {
                 // html += `<td class="pixel" style="background-color: rgb(${colorString})">`;
                 canvasContext.fillStyle = `rgb(${colorString})`;
                 canvasContext.fillRect(column * pixelSize, row * pixelSize, pixelSize, pixelSize);
             }
         }
+
+        html += '</tr>';
+    }
+
+    if (debug === true) {
+        table.innerHTML = html;
     }
 }
 
@@ -151,7 +167,7 @@ function createFireSource() {
         const overflowPixelIndex = fireWidth * fireHeight;
         const pixelIndex = (overflowPixelIndex - fireWidth) + column;
 
-        firePixelsArray[pixelIndex] = 36;
+        firePixelsArray[pixelIndex] = fireBase;
     }
 }
 
@@ -204,17 +220,54 @@ function decreaseFireSource() {
 
 function toggleDebugMode() {
     if (debug === false) {
-        fireWidth = 200;
-        fireHeight = 80;
+        fireWidth *= pixelSize;
+        fireHeight *= pixelSize;
+        calculateCanvasDimension();
+        table.innerHTML = '';
     } else {
-        // fireWidth = 60;
-        // fireHeight = 40;
+        fireWidth /= pixelSize;
+        fireHeight /= pixelSize;
+
+        canvas.width = 0;
+        canvas.height = 0;
+        // calculateCanvasDimension(0, 0);
     }
 
     debug = !debug;
 
     createFireDataStructure();
     createFireSource();
+}
+
+function changeFireBase(value) {
+    fireBase = value;
+
+    createFireDataStructure();
+    createFireSource();
+}
+
+function changePixelSize(value) {
+    pixelSize = value;
+
+    createFireDataStructure();
+    createFireSource();
+    calculateCanvasDimension();
+}
+
+function changeFireWidth(value) {
+    fireWidth = value * pixelSize;
+
+    createFireDataStructure();
+    createFireSource();
+    calculateCanvasDimension();
+}
+
+function changeFireHeight(value) {
+    fireHeight = value * pixelSize;
+
+    createFireDataStructure();
+    createFireSource();
+    calculateCanvasDimension();
 }
 
 start();

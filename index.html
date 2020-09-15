@@ -18,6 +18,7 @@
     <center>
         <h1>DOOM Fire</h1>
         <canvas id="fire-canvas"></canvas>
+        <table id="fire-table"></table>
 
         <div class="margin">
             <button onclick="decreaseFireSource();">-</button>
@@ -35,6 +36,30 @@
             <button onclick="changeWindDirection(0);">Left</button>
             <button onclick="changeWindDirection(1);">No wind</button>
             <button onclick="changeWindDirection(2);">Right</button>
+        </div>
+        <div class="margin">
+            <span>Change the base!</span>
+        </div>
+        <div class="margin">
+            <input type="range" name="fireBase" min="0" max="36" value="36" onchange="changeFireBase(this.value);">
+        </div>
+        <div class="margin">
+            <span>Change the pixel size!</span>
+        </div>
+        <div class="margin">
+            <input type="range" name="pixelSize" min="2" max="14" value="4" onchange="changePixelSize(this.value);">
+        </div>
+        <div class="margin">
+            <span>Change the width!</span>
+        </div>
+        <div class="margin">
+            <input type="number" name="fireWidth" onchange="changeFireWidth(this.value);" min="0" value="50">
+        </div>
+        <div class="margin">
+            <span>Change the height!</span>
+        </div>
+        <div class="margin">
+            <input type="number" name="fireHeight" onchange="changeFireHeight(this.value);" min="0" value="20">
         </div>
     </center>
 
